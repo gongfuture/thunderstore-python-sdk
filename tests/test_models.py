@@ -86,11 +86,11 @@ def test_community_valid() -> None:
         name="Risk of Rain 2",
         discord_url="https://discord.gg/example",
         wiki_url="https://wiki.example.com",
-        require_package_category_choice=True,
+        require_package_listing_approval=True,
     )
     assert community.identifier == "riskofrain2"
     assert community.name == "Risk of Rain 2"
-    assert community.require_package_category_choice is True
+    assert community.require_package_listing_approval is True
 
 
 def test_community_without_optional_fields() -> None:
@@ -98,7 +98,7 @@ def test_community_without_optional_fields() -> None:
     community = Community(
         identifier="valheim",
         name="Valheim",
-        require_package_category_choice=False,
+        require_package_listing_approval=False,
     )
     assert community.discord_url is None
     assert community.wiki_url is None

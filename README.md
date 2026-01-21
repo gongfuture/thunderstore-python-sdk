@@ -87,16 +87,31 @@ client = ThunderstoreClient(api_token="your_token_here")
 
 ## API Methods
 
-### Packages
+### V1 API (Production)
 
-- `list_packages(community=None, ordering=None)` - List packages
-- `get_package(owner, name)` - Get detailed package information
-- `search_packages(query, community=None)` - Search for packages
+**Packages:**
+- `list_packages(community=None, ordering=None)` - List all packages
+- `get_package(owner, name)` - Get specific package details (searches through all packages)
+- `search_packages(query, community=None)` - Search packages (client-side filtering)
 
-### Communities
+**Communities:**
+- `list_communities()` - List all communities
+- `get_community(identifier)` - Get community details
+- `get_cyberstorm_community(community_id)` - Get detailed community info with stats
 
-- `list_communities()` - List all game communities
-- `get_community(identifier)` - Get specific community information
+### Experimental API
+
+**Packages:**
+- `list_packages_experimental(cursor=None)` - List packages with proper pagination
+- `get_package_experimental(namespace, name)` - Get single package
+- `get_package_version_experimental(namespace, name, version)` - Get specific version
+
+**Communities & Categories:**
+- `list_community_categories(community, cursor=None)` - List community categories
+
+**Metrics:**
+- `get_package_metrics(namespace, name)` - Get package download/rating metrics
+- `get_package_version_metrics(namespace, name, version)` - Get version download metrics
 
 ## Development
 

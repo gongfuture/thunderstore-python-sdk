@@ -12,7 +12,17 @@ from .exceptions import (
     ThunderstoreError,
     ValidationError,
 )
-from .models import Community, Package, PackageVersion
+from .models import (
+    Community,
+    CyberstormCommunity,
+    Package,
+    PackageCategory,
+    PackageExperimental,
+    PackageMetrics,
+    PackageVersion,
+    PackageVersionExperimental,
+    PackageVersionMetrics,
+)
 
 __version__ = "0.1.0"
 
@@ -26,5 +36,11 @@ __all__ = [
     "ValidationError",
     "Package",
     "PackageVersion",
+    "PackageExperimental",
+    "PackageVersionExperimental",
+    "PackageCategory",
     "Community",
+    "CyberstormCommunity",
+    "PackageMetrics",
+    "PackageVersionMetrics",
 ]
