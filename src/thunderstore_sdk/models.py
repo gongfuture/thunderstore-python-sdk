@@ -16,38 +16,38 @@ class PackageCategory(BaseModel):
 class PackageVersion(BaseModel):
     """Represents a package version."""
 
-    namespace: str
     name: str
-    version_number: str
     full_name: str
     description: str
     icon: HttpUrl
+    version_number: str
     dependencies: list[str]
     download_url: HttpUrl
     downloads: int
     date_created: datetime
     website_url: HttpUrl | None = None
     is_active: bool
+    uuid4: str
     file_size: int
 
 
 class Package(BaseModel):
     """Represents a package in the Thunderstore."""
 
-    namespace: str
     name: str
     full_name: str
     owner: str
     package_url: HttpUrl
+    donation_link: HttpUrl | None = None
     date_created: datetime
     date_updated: datetime
+    uuid4: str
     rating_score: int
     is_pinned: bool
     is_deprecated: bool
     has_nsfw_content: bool
     categories: list[str]
     versions: list[PackageVersion]
-    latest: PackageVersion | None = None
 
 
 class Community(BaseModel):
@@ -63,20 +63,20 @@ class Community(BaseModel):
 class PackageListing(BaseModel):
     """Represents a package listing (simplified package info)."""
 
-    namespace: str
     name: str
     full_name: str
     owner: str
     package_url: HttpUrl
+    donation_link: HttpUrl | None = None
     date_created: datetime
     date_updated: datetime
+    uuid4: str
     rating_score: int
     is_pinned: bool
     is_deprecated: bool
     has_nsfw_content: bool
     categories: list[str]
-    latest_version_number: str | None = None
-    total_downloads: int = 0
+    versions: list[PackageVersion]
 
 
 class PaginatedResponse(BaseModel):

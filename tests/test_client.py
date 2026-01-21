@@ -36,120 +36,97 @@ def test_list_packages(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> Non
     """Test listing packages."""
     mock_response = [
         {
-            "namespace": "TestTeam",
             "name": "TestMod",
             "full_name": "TestTeam-TestMod",
             "owner": "TestUser",
             "package_url": "https://thunderstore.io/package/TestTeam/TestMod/",
             "date_created": "2024-01-01T12:00:00Z",
             "date_updated": "2024-01-02T12:00:00Z",
+            "uuid4": "test-uuid",
             "rating_score": 100,
             "is_pinned": False,
             "is_deprecated": False,
             "has_nsfw_content": False,
             "categories": ["mods"],
-            "latest_version_number": "1.0.0",
-            "total_downloads": 500,
+            "versions": [],
         }
     ]
     httpx_mock.add_response(json=mock_response)
 
     packages = client.list_packages()
     assert len(packages) == 1
-    assert packages[0].namespace == "TestTeam"
     assert packages[0].name == "TestMod"
-
-
-def test_list_packages_paginated(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> None:
-    """Test listing packages with pagination."""
-    mock_response = {
-        "count": 1,
-        "next": None,
-        "previous": None,
-        "results": [
-            {
-                "namespace": "TestTeam",
-                "name": "TestMod",
-                "full_name": "TestTeam-TestMod",
-                "owner": "TestUser",
-                "package_url": "https://thunderstore.io/package/TestTeam/TestMod/",
-                "date_created": "2024-01-01T12:00:00Z",
-                "date_updated": "2024-01-02T12:00:00Z",
-                "rating_score": 100,
-                "is_pinned": False,
-                "is_deprecated": False,
-                "has_nsfw_content": False,
-                "categories": ["mods"],
-                "latest_version_number": "1.0.0",
-                "total_downloads": 500,
-            }
-        ],
-    }
-    httpx_mock.add_response(json=mock_response)
-
-    packages = client.list_packages(page=2)
-    assert len(packages) == 1
 
 
 def test_get_package(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> None:
     """Test getting a specific package."""
-    mock_response = {
-        "namespace": "TestTeam",
-        "name": "TestMod",
-        "full_name": "TestTeam-TestMod",
-        "owner": "TestUser",
-        "package_url": "https://thunderstore.io/package/TestTeam/TestMod/",
-        "date_created": "2024-01-01T12:00:00Z",
-        "date_updated": "2024-01-02T12:00:00Z",
-        "rating_score": 100,
-        "is_pinned": False,
-        "is_deprecated": False,
-        "has_nsfw_content": False,
-        "categories": ["mods"],
-        "versions": [
-            {
-                "namespace": "TestTeam",
-                "name": "TestMod",
-                "version_number": "1.0.0",
-                "full_name": "TestTeam-TestMod-1.0.0",
-                "description": "A test mod",
-                "icon": "https://example.com/icon.png",
-                "dependencies": [],
-                "download_url": "https://example.com/download.zip",
-                "downloads": 100,
-                "date_created": "2024-01-01T12:00:00Z",
-                "website_url": "https://example.com",
-                "is_active": True,
-                "file_size": 1024,
-            }
-        ],
-    }
-    httpx_mock.add_response(json=mock_response)
-
-    package = client.get_package("TestTeam", "TestMod")
-    assert package.namespace == "TestTeam"
-    assert package.name == "TestMod"
-    assert len(package.versions) == 1
-
-
-def test_search_packages(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> None:
-    """Test searching packages."""
     mock_response = [
         {
-            "namespace": "TestTeam",
             "name": "TestMod",
             "full_name": "TestTeam-TestMod",
             "owner": "TestUser",
             "package_url": "https://thunderstore.io/package/TestTeam/TestMod/",
             "date_created": "2024-01-01T12:00:00Z",
             "date_updated": "2024-01-02T12:00:00Z",
+            "uuid4": "test-uuid",
             "rating_score": 100,
             "is_pinned": False,
             "is_deprecated": False,
             "has_nsfw_content": False,
             "categories": ["mods"],
-            "latest_version_number": "1.0.0",
-            "total_downloads": 500,
+            "versions": [
+                {
+                    "name": "TestMod",
+                    "version_number": "1.0.0",
+                    "full_name": "TestTeam-TestMod-1.0.0",
+                    "description": "A test mod",
+                    "icon": "https://example.com/icon.png",
+                    "dependencies": [],
+                    "download_url": "https://example.com/download.zip",
+                    "downloads": 100,
+                    "date_created": "2024-01-01T12:00:00Z",
+                    "website_url": "https://example.com",
+                    "is_active": True,
+                    "uuid4": "version-uuid",
+                    "file_size": 1024,
+                }
+            ],
+        }
+    ]
+    httpx_mock.add_response(json=mock_response)
+
+    package = client.get_package("TestTeam", "TestMod")
+    assert package is not None
+    assert package.name == "TestMod"
+    assert len(package.versions) == 1
+
+
+def test_get_package_not_found(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> None:
+    """Test getting a non-existent package."""
+    mock_response: list[dict] = []
+    httpx_mock.add_response(json=mock_response)
+
+    package = client.get_package("NonExistent", "Package")
+    assert package is None
+
+
+def test_search_packages(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> None:
+    """Test searching packages."""
+    mock_response = [
+        {
+            "name": "TestMod",
+            "full_name": "TestTeam-TestMod",
+            "owner": "TestUser",
+            "package_url": "https://thunderstore.io/package/TestTeam/TestMod/",
+            "date_created": "2024-01-01T12:00:00Z",
+            "date_updated": "2024-01-02T12:00:00Z",
+            "uuid4": "test-uuid",
+            "rating_score": 100,
+            "is_pinned": False,
+            "is_deprecated": False,
+            "has_nsfw_content": False,
+            "categories": ["mods"],
+            "versions": [],
         }
     ]
     httpx_mock.add_response(json=mock_response)
@@ -198,7 +175,7 @@ def test_not_found_error(client: ThunderstoreClient, httpx_mock: HTTPXMock) -> N
     httpx_mock.add_response(status_code=404, text="Not found")
 
     with pytest.raises(NotFoundError) as exc_info:
-        client.get_package("NonExistent", "Package")
+        client.list_packages()
     assert exc_info.value.status_code == 404
 
 

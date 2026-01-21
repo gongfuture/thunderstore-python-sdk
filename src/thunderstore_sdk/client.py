@@ -5,7 +5,7 @@ from typing import Any
 import httpx
 
 from .exceptions import APIError, AuthenticationError, NotFoundError, RateLimitError
-from .models import Community, Package, PackageListing
+from .models import Community, Package
 
 
 class ThunderstoreClient:
@@ -65,74 +65,77 @@ class ThunderstoreClient:
     def list_packages(
         self,
         community: str | None = None,
-        page: int = 1,
-        ordering: str = "-date_updated",
-    ) -> list[PackageListing]:
+        ordering: str | None = None,
+    ) -> list[Package]:
         """
         List packages from the Thunderstore.
 
         Args:
             community: Filter by community identifier (e.g., 'riskofrain2')
-            page: Page number for pagination
             ordering: Sort order (e.g., '-date_updated', 'name', '-rating_score')
 
         Returns:
-            List of package listings
+            List of packages
         """
-        params: dict[str, Any] = {"page": page, "ordering": ordering}
+        params: dict[str, Any] = {}
         if community:
             params["community"] = community
+        if ordering:
+            params["ordering"] = ordering
 
         response = self.client.get("/api/v1/package/", params=params)
         data = self._handle_response(response)
 
-        # Handle both paginated and non-paginated responses
-        if isinstance(data, dict) and "results" in data:
-            return [PackageListing(**item) for item in data["results"]]
-        return [PackageListing(**item) for item in data]
+        # API returns a list directly
+        if isinstance(data, list):
+            return [Package(**item) for item in data]
+        return []
 
-    def get_package(self, namespace: str, name: str) -> Package:
+    def get_package(self, owner: str, name: str) -> Package | None:
         """
         Get detailed information about a specific package.
 
         Args:
-            namespace: Package namespace (owner)
+            owner: Package owner
             name: Package name
 
         Returns:
-            Package details
+            Package details or None if not found
         """
-        response = self.client.get(f"/api/v1/package/{namespace}/{name}/")
-        data = self._handle_response(response)
-        return Package(**data)
+        # Since API returns all packages, we search for the one we want
+        packages = self.list_packages()
+        full_name = f"{owner}-{name}"
+        for package in packages:
+            if package.full_name == full_name:
+                return package
+        return None
 
     def search_packages(
         self,
         query: str,
         community: str | None = None,
-        page: int = 1,
-    ) -> list[PackageListing]:
+    ) -> list[Package]:
         """
         Search for packages.
 
         Args:
             query: Search query string
             community: Filter by community identifier
-            page: Page number for pagination
 
         Returns:
             List of matching packages
         """
-        params: dict[str, Any] = {"q": query, "page": page}
-        if community:
-            params["community"] = community
-
-        response = self.client.get("/api/v1/package/", params=params)
-        data = self._handle_response(response)
-
-        if isinstance(data, dict) and "results" in data:
-            return [PackageListing(**item) for item in data["results"]]
-        return [PackageListing(**item) for item in data]
+        packages = self.list_packages(community=community)
+        # Simple client-side search
+        query_lower = query.lower()
+        return [
+            pkg
+            for pkg in packages
+            if query_lower in pkg.name.lower()
+            or query_lower in pkg.full_name.lower()
+            or query_lower in pkg.owner.lower()
+            or any(query_lower in cat.lower() for cat in pkg.categories)
+        ]
 
     def list_communities(self) -> list[Community]:
         """

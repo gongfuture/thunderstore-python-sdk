@@ -40,11 +40,13 @@ client = ThunderstoreClient()
 # List all packages
 packages = client.list_packages()
 for package in packages[:5]:
-    print(f"{package.full_name} - {package.total_downloads} downloads")
+    print(f"{package.full_name} - Rating: {package.rating_score}")
 
 # Get a specific package
-package = client.get_package("BepInEx", "BepInExPack")
-print(f"Latest version: {package.latest.version_number}")
+package = client.get_package("ebkr", "r2modman")
+if package:
+    print(f"Package: {package.full_name}")
+    print(f"Versions: {len(package.versions)}")
 
 # Search for packages
 results = client.search_packages("utility")
@@ -52,7 +54,7 @@ print(f"Found {len(results)} packages")
 
 # List communities
 communities = client.list_communities()
-for community in communities:
+for community in communities[:5]:
     print(f"{community.name} ({community.identifier})")
 
 # Always close the client when done
@@ -87,9 +89,9 @@ client = ThunderstoreClient(api_token="your_token_here")
 
 ### Packages
 
-- `list_packages(community=None, page=1, ordering="-date_updated")` - List packages
-- `get_package(namespace, name)` - Get detailed package information
-- `search_packages(query, community=None, page=1)` - Search for packages
+- `list_packages(community=None, ordering=None)` - List packages
+- `get_package(owner, name)` - Get detailed package information
+- `search_packages(query, community=None)` - Search for packages
 
 ### Communities
 

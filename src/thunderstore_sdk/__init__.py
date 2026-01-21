@@ -12,7 +12,7 @@ from .exceptions import (
     ThunderstoreError,
     ValidationError,
 )
-from .models import Community, Package, PackageListing, PackageVersion
+from .models import Community, Package, PackageVersion
 
 __version__ = "0.1.0"
 
@@ -26,6 +26,5 @@ __all__ = [
     "ValidationError",
     "Package",
     "PackageVersion",
-    "PackageListing",
     "Community",
 ]

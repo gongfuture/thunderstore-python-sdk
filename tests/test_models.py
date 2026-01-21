@@ -5,12 +5,7 @@ from datetime import datetime
 import pytest
 from pydantic import ValidationError
 
-from thunderstore_sdk.models import (
-    Community,
-    PackageCategory,
-    PackageListing,
-    PackageVersion,
-)
+from thunderstore_sdk.models import Community, Package, PackageCategory, PackageVersion
 
 
 def test_package_category_valid() -> None:
@@ -23,7 +18,6 @@ def test_package_category_valid() -> None:
 def test_package_version_valid() -> None:
     """Test PackageVersion with valid data."""
     version = PackageVersion(
-        namespace="TestTeam",
         name="TestMod",
         version_number="1.0.0",
         full_name="TestTeam-TestMod-1.0.0",
@@ -35,9 +29,9 @@ def test_package_version_valid() -> None:
         date_created=datetime(2024, 1, 1, 12, 0, 0),
         website_url="https://example.com",
         is_active=True,
+        uuid4="test-uuid",
         file_size=1024,
     )
-    assert version.namespace == "TestTeam"
     assert version.name == "TestMod"
     assert version.version_number == "1.0.0"
     assert version.downloads == 100
@@ -48,7 +42,6 @@ def test_package_version_valid() -> None:
 def test_package_version_without_optional_fields() -> None:
     """Test PackageVersion without optional fields."""
     version = PackageVersion(
-        namespace="TestTeam",
         name="TestMod",
         version_number="1.0.0",
         full_name="TestTeam-TestMod-1.0.0",
@@ -59,33 +52,31 @@ def test_package_version_without_optional_fields() -> None:
         downloads=0,
         date_created=datetime(2024, 1, 1, 12, 0, 0),
         is_active=True,
+        uuid4="test-uuid",
         file_size=1024,
     )
     assert version.website_url is None
 
 
-def test_package_listing_valid() -> None:
-    """Test PackageListing with valid data."""
-    listing = PackageListing(
-        namespace="TestTeam",
+def test_package_valid() -> None:
+    """Test Package with valid data."""
+    package = Package(
         name="TestMod",
         full_name="TestTeam-TestMod",
         owner="TestUser",
         package_url="https://thunderstore.io/package/TestTeam/TestMod/",
         date_created=datetime(2024, 1, 1, 12, 0, 0),
         date_updated=datetime(2024, 1, 2, 12, 0, 0),
+        uuid4="test-uuid",
         rating_score=100,
         is_pinned=False,
         is_deprecated=False,
         has_nsfw_content=False,
         categories=["mods"],
-        latest_version_number="1.0.0",
-        total_downloads=500,
+        versions=[],
     )
-    assert listing.namespace == "TestTeam"
-    assert listing.name == "TestMod"
-    assert listing.rating_score == 100
-    assert listing.total_downloads == 500
+    assert package.name == "TestMod"
+    assert package.rating_score == 100
 
 
 def test_community_valid() -> None:
@@ -116,17 +107,18 @@ def test_community_without_optional_fields() -> None:
 def test_package_invalid_url() -> None:
     """Test that invalid URLs raise ValidationError."""
     with pytest.raises(ValidationError):
-        PackageListing(
-            namespace="TestTeam",
+        Package(
             name="TestMod",
             full_name="TestTeam-TestMod",
             owner="TestUser",
             package_url="not-a-valid-url",  # type: ignore
             date_created=datetime(2024, 1, 1, 12, 0, 0),
             date_updated=datetime(2024, 1, 2, 12, 0, 0),
+            uuid4="test-uuid",
             rating_score=100,
             is_pinned=False,
             is_deprecated=False,
             has_nsfw_content=False,
             categories=["mods"],
+            versions=[],
         )
