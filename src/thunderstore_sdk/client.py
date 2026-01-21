@@ -34,7 +34,9 @@ class ThunderstoreClient:
     def client(self) -> httpx.Client:
         """Get or create the HTTP client."""
         if self._client is None:
-            headers = {"User-Agent": "thunderstore-sdk/0.1.0"}
+            from . import __version__
+
+            headers = {"User-Agent": f"thunderstore-sdk/{__version__}"}
             if self.api_token:
                 headers["Authorization"] = f"Bearer {self.api_token}"
             self._client = httpx.Client(
