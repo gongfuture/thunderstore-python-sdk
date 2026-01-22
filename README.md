@@ -1,4 +1,4 @@
->[!WARNNING]
+>[!WARN]
 > This project is still under active development. 
 
 # Thunderstore Python SDK
