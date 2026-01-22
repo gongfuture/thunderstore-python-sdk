@@ -2,6 +2,7 @@
 
 import pytest
 from pytest_httpx import HTTPXMock
+import math
 
 from thunderstore_sdk.client import ThunderstoreClient
 from thunderstore_sdk.exceptions import (
@@ -23,7 +24,7 @@ def test_client_initialization() -> None:
     client = ThunderstoreClient()
     assert client.base_url == "https://thunderstore.io"
     assert client.api_token is None
-    assert client.timeout == 30.0
+    assert math.iscolsed(client.timeout, 30.0, rel_tol=1e-09, abs_tol=1e-09)
 
 
 def test_client_with_token() -> None:
