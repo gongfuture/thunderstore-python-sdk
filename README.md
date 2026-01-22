@@ -1,6 +1,6 @@
 # Thunderstore Python SDK
 
-[![Python Version](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
@@ -170,7 +170,7 @@ thunderstore-python-sdk/
 
 ## Requirements
 
-- Python 3.12+
+- Python 3.10+
 - httpx >= 0.28.1
 - pydantic >= 2.12.5
 

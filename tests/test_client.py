@@ -1,8 +1,9 @@
 """Tests for Thunderstore SDK client."""
 
+import math
+
 import pytest
 from pytest_httpx import HTTPXMock
-import math
 
 from thunderstore_sdk.client import ThunderstoreClient
 from thunderstore_sdk.exceptions import (
