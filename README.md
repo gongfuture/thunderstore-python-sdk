@@ -1,3 +1,6 @@
+>[!WARNNING]
+> This project is still under active development. 
+
 # Thunderstore Python SDK
 
 [![Python Version](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
