@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "luochu",
+        "projectKey": "gongfuture_thunderstore-python-sdk"
+    }
+}
